@@ -1,0 +1,215 @@
+/******************************************************************************
+ *
+ * Copyright (c) 2014  Haixing Hu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+package com.github.haixing_hu.sort;
+
+import com.github.haixing_hu.lang.Equality;
+import com.github.haixing_hu.lang.Hash;
+import com.github.haixing_hu.lang.StringUtils;
+import com.github.haixing_hu.text.tostring.ToStringBuilder;
+
+import static com.github.haixing_hu.lang.Argument.requireNonNull;
+
+/**
+ * A {@link SortOrder} specifies how to sort a property.
+ *
+ * @author Haixing Hu
+ */
+public class SortOrder {
+
+  /**
+   * The default sorting direction.
+   */
+  public static final SortDirection DEFAULT_DIRECTION = SortDirection.ASC;
+
+  /**
+   * The default null handling strategy.
+   */
+  public static final NullHandlingStrategy DEFAULT_NULL_HANDLING_STRATEGY =
+      NullHandlingStrategy.NATIVE;
+
+  private String property;
+  private SortDirection direction;
+  private NullHandlingStrategy nullHandlingStrategy;
+
+  /**
+   * Constructs a {@link SortOrder}.
+   * <p>
+   * The new {@link SortOrder} will have an empty property name, the ascending
+   * sorting direction, and the native null handling strategy.
+   */
+  public SortOrder() {
+    property = StringUtils.EMPTY;
+    direction = DEFAULT_DIRECTION;
+    nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
+  }
+
+  /**
+   * Constructs a {@link SortOrder}.
+   * <p>
+   * The new {@link SortOrder} will have the specified property name, the
+   * ascending sorting direction, and the native null handling strategy.
+   *
+   * @param property
+   *          the name of the property to be sorted, which cannot be
+   *          {@code null}.
+   */
+  public SortOrder(String property) {
+    this.property = requireNonNull("property", property);
+    direction = DEFAULT_DIRECTION;
+    nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
+  }
+
+  /**
+   * Constructs a {@link SortOrder}.
+   * <p>
+   * The new {@link SortOrder} will have the specified property name, the
+   * specified sorting direction, and the native null handling strategy.
+   *
+   * @param property
+   *          the name of the property to be sorted, which cannot be
+   *          {@code null}.
+   * @param direction
+   *          the sorting direction, which cannot be {@code null}.
+   */
+  public SortOrder(String property, SortDirection direction) {
+    this.property = requireNonNull("property", property);
+    this.direction = requireNonNull("direction", direction);
+    nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
+  }
+
+  /**
+   * Constructs a {@link SortOrder}.
+   * <p>
+   * The new {@link SortOrder} will have the specified property name, the
+   * specified sorting direction, and the specified null handling strategy.
+   *
+   * @param property
+   *          the name of the property to be sorted, which cannot be
+   *          {@code null}.
+   * @param direction
+   *          the sorting direction, which cannot be {@code null}.
+   * @param nullHandlingStrategy
+   *          the {@code null} values handling strategy, which cannot be
+   *          {@code null}.
+   */
+  public SortOrder(String property, SortDirection direction,
+      NullHandlingStrategy nullHandlingStrategy) {
+    this.property = requireNonNull("property", property);
+    this.direction = requireNonNull("direction", direction);
+    this.nullHandlingStrategy = requireNonNull("nullHandlingStrategy",
+        nullHandlingStrategy);
+  }
+
+  /**
+   * Gets the name of the property to be sorted.
+   *
+   * @return the name of the property to be sorted, which will never be
+   *         {@code null}.
+   */
+  public String getProperty() {
+    return property;
+  }
+
+  /**
+   * Sets the name of the property to be sorted.
+   *
+   * @param property
+   *          the new name of the property to be sorted, which cannot be
+   *          {@code null}.
+   */
+  public void setProperty(String property) {
+    this.property = requireNonNull("property", property);
+  }
+
+  /**
+   * Gets the sorting direction.
+   *
+   * @return the sorting direction, which will never be {@code null}.
+   */
+  public SortDirection getDirection() {
+    return direction;
+  }
+
+  /**
+   * Sets the sorting direction.
+   *
+   * @param direction
+   *          the new sorting direction to set, which cannot be {@code null}.
+   */
+  public void setDirection(SortDirection direction) {
+    this.direction = requireNonNull("direction", direction);
+  }
+
+  /**
+   * Gets the null handling strategy.
+   *
+   * @return the nullHandlingStrategy, which will never be {@code null}.
+   */
+  public NullHandlingStrategy getNullHandlingStrategy() {
+    return nullHandlingStrategy;
+  }
+
+  /**
+   * Sets the nullHandlingStrategy.
+   *
+   * @param nullHandlingStrategy
+   *          the new nullHandlingStrategy to set, which cannot be {@code null}.
+   */
+  public void setNullHandlingStrategy(NullHandlingStrategy nullHandlingStrategy) {
+    this.nullHandlingStrategy = requireNonNull("nullHandlingStrategy",
+        nullHandlingStrategy);
+  }
+
+  @Override
+  public int hashCode() {
+    final int multiplier = 13;
+    int code = 7;
+    code = Hash.combine(code, multiplier, property);
+    code = Hash.combine(code, multiplier, direction);
+    code = Hash.combine(code, multiplier, nullHandlingStrategy);
+    return code;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final SortOrder other = (SortOrder) obj;
+    return (direction == other.direction)
+        && (nullHandlingStrategy == other.nullHandlingStrategy)
+        && Equality.equals(property, other.property);
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+                .append("property", property)
+                .append("direction", direction)
+                .append("nullHandlingStrategy", nullHandlingStrategy)
+                .toString();
+  }
+
+}
