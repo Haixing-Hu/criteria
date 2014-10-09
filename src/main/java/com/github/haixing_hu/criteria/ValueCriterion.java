@@ -18,6 +18,7 @@
 package com.github.haixing_hu.criteria;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
@@ -37,14 +38,15 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class ValueCriterion extends Criterion {
+@Immutable
+public final class ValueCriterion extends Criterion {
 
-  private String property;
-  private BinaryOperator operator;
-  private Object value;
+  private final String property;
+  private final BinaryOperator operator;
+  private final Object value;
 
   /**
-   * Constructs a {@link ValueCriterion}.
+   * Constructs a {@link ValueCriterion} with {@code null} property value.
    *
    * @param property
    *          the name of a property.
@@ -89,36 +91,12 @@ public class ValueCriterion extends Criterion {
   }
 
   /**
-   * Sets the name of the property involved in this criterion.
-   *
-   * @param property
-   *          the name of the new property involved in this criterion.
-   * @throws NullPointerException
-   *           if {@code property} is {@code null}.
-   */
-  public void setProperty(final String property) {
-    this.property = requireNonEmpty("property", property);
-  }
-
-  /**
    * Gets the binary operator involved in this criterion.
    *
    * @return the binary operator involved in this criterion.
    */
   public BinaryOperator getOperator() {
     return operator;
-  }
-
-  /**
-   * Sets the binary operator involved in this criterion.
-   *
-   * @param operator
-   *          the new binary operator involved in this criterion.
-   * @throws NullPointerException
-   *           if {@code operator} is {@code null}.
-   */
-  public void setOperator(final BinaryOperator operator) {
-    this.operator = requireNonNull("operator", operator);
   }
 
   /**
@@ -130,18 +108,6 @@ public class ValueCriterion extends Criterion {
    */
   public Object getValue() {
     return value;
-  }
-
-  /**
-   * Sets the value as the other operand of the binary operator, which could be
-   * {@code null}.
-   *
-   * @param value
-   *          the new value as the other operand of the binary operator, which
-   *          could be {@code null}.
-   */
-  public void setValue(@Nullable final Object value) {
-    this.value = value;
   }
 
   @Override

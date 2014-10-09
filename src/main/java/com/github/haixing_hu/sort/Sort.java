@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link Sort} represents a sorting strategy.
+ * A {@link Sort} represents a sorting rule.
  *
  * @author Haixing Hu
  */
@@ -30,11 +30,19 @@ public class Sort extends ArrayList<SortOrder> {
 
   private static final long serialVersionUID = - 7323846213838886382L;
 
-  public Sort(List<SortOrder> orders) {
-    super(orders.size());
-    this.addAll(orders);
+  /**
+   * Constructs an empty sorting rule.
+   */
+  public Sort() {
+    super();
   }
 
+  /**
+   * Constructs a sorting rule with the specified sorting orders.
+   *
+   * @param orders
+   *          an array of sorting orders.
+   */
   public Sort(SortOrder... orders) {
     super(orders.length);
     for (final SortOrder order : orders) {
@@ -42,31 +50,89 @@ public class Sort extends ArrayList<SortOrder> {
     }
   }
 
+  /**
+   * Constructs a sorting rule with the specified sorting orders.
+   *
+   * @param orders
+   *          a list of sorting orders.
+   */
+  public Sort(List<SortOrder> orders) {
+    super(orders.size());
+    this.addAll(orders);
+  }
+
+  /**
+   * Constructs a sorting rule to sort with the specified properties in the
+   * default direction and with the default null handling strategy.
+   *
+   * @param properties
+   *          an array of properties used as sorting orders.
+   */
   public Sort(String... properties) {
     this(SortOrder.DEFAULT_DIRECTION, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY,
         properties);
   }
 
-  public Sort(SortDirection direction, List<String> properties) {
-    this(direction, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY, properties);
-  }
-
+  /**
+   * Constructs a sorting rule to sort with the specified properties in the
+   * specified direction and with the default null handling strategy.
+   *
+   * @param direction
+   *          a sorting direction.
+   * @param properties
+   *          an array of properties used as sorting orders.
+   */
   public Sort(SortDirection direction, String... properties) {
     this(direction, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY, properties);
   }
 
-  public Sort(SortDirection direction,
-      NullHandlingStrategy nullHandlingStrategy, List<String> properties) {
-    super(properties.size());
+  /**
+   * Constructs a sorting rule to sort with the specified properties in the
+   * specified direction and with the default null handling strategy.
+   *
+   * @param direction
+   *          a sorting direction.
+   * @param properties
+   *          a list of properties used as sorting orders.
+   */
+  public Sort(SortDirection direction, List<String> properties) {
+    this(direction, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY, properties);
+  }
+
+  /**
+   * Constructs a sorting rule to sort with the specified properties in the
+   * specified direction and with the specified null handling strategy.
+   *
+   * @param direction
+   *          a sorting direction.
+   * @param nullHandlingStrategy
+   *          a null handling strategy.
+   * @param properties
+   *          an array of properties used as sorting orders.
+   */
+    public Sort(SortDirection direction,
+        NullHandlingStrategy nullHandlingStrategy, String... properties) {
+    super(properties.length);
     for (final String property : properties) {
       final SortOrder order = new SortOrder(property, direction, nullHandlingStrategy);
       this.add(order);
     }
   }
 
+  /**
+   * Constructs a sorting rule to sort with the specified properties in the
+   * specified direction and with the specified null handling strategy.
+   *
+   * @param direction
+   *          a sorting direction.
+   * @param nullHandlingStrategy
+   *          a null handling strategy.
+   * @param properties
+   *          a list of properties used as sorting orders.
+   */
   public Sort(SortDirection direction,
-      NullHandlingStrategy nullHandlingStrategy, String... properties) {
-    super(properties.length);
+      NullHandlingStrategy nullHandlingStrategy, List<String> properties) {
+    super(properties.size());
     for (final String property : properties) {
       final SortOrder order = new SortOrder(property, direction, nullHandlingStrategy);
       this.add(order);

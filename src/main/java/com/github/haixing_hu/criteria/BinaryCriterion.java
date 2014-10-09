@@ -16,6 +16,8 @@
  *
  ******************************************************************************/
 package com.github.haixing_hu.criteria;
+import javax.annotation.concurrent.Immutable;
+
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
 import com.github.haixing_hu.text.tostring.ToStringBuilder;
@@ -29,11 +31,12 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class BinaryCriterion extends Criterion {
+@Immutable
+public final class BinaryCriterion extends Criterion {
 
-  private String leftProperty;
-  private BinaryOperator operator;
-  private String rightProperty;
+  private final String leftProperty;
+  private final BinaryOperator operator;
+  private final String rightProperty;
 
   /**
    * Constructs a {@link ValueCriterion}.
@@ -63,22 +66,8 @@ public class BinaryCriterion extends Criterion {
    *
    * @return the name of the property whose value acts as the left operand.
    */
-  public final String getLeftProperty() {
+  public String getLeftProperty() {
     return leftProperty;
-  }
-
-  /**
-   * Gets the name of the property whose value acts as the left operand.
-   *
-   * @param leftProperty
-   *          the name of the new property whose value acts as the left operand.
-   * @throws NullPointerException
-   *           if {@code leftProperty}is {@code null}.
-   * @throws IllegalArgumentException
-   *           if {@code leftProperty} is empty.
-   */
-  public final void setLeftProperty(String leftProperty) {
-    this.leftProperty = requireNonEmpty("leftProperty", leftProperty);
   }
 
   /**
@@ -86,20 +75,8 @@ public class BinaryCriterion extends Criterion {
    *
    * @return the binary operator involved in this criterion.
    */
-  public final BinaryOperator getOperator() {
+  public BinaryOperator getOperator() {
     return operator;
-  }
-
-  /**
-   * Sets the binary operator involved in this criterion.
-   *
-   * @param operator
-   *          the new binary operator involved in this criterion.
-   * @throws NullPointerException
-   *          if {@code operator} is {@code null}.
-   */
-  public final void setOperator(final BinaryOperator operator) {
-    this.operator = requireNonNull("operator", operator);
   }
 
   /**
@@ -107,23 +84,8 @@ public class BinaryCriterion extends Criterion {
    *
    * @return the name of the property whose value acts as the right operand.
    */
-  public final String getRightProperty() {
+  public String getRightProperty() {
     return rightProperty;
-  }
-
-  /**
-   * Gets the name of the property whose value acts as the right operand.
-   *
-   * @param rightProperty
-   *          the name of the new property whose value acts as the right
-   *          operand.
-   * @throws NullPointerException
-   *           if {@code rightProperty} is {@code null}.
-   * @throws IllegalArgumentException
-   *           if {@code rightProperty} is empty.
-   */
-  public final void setRightProperty(String leftProperty) {
-    rightProperty = requireNonEmpty("rightProperty", rightProperty);
   }
 
   @Override

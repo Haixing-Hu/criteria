@@ -16,7 +16,9 @@
  *
  ******************************************************************************/
 package com.github.haixing_hu.criteria;
-import javax.annotation.Nullable;
+import java.util.Collection;
+
+import javax.annotation.concurrent.Immutable;
 
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
@@ -32,11 +34,12 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class CollectionCriterion extends Criterion {
+@Immutable
+public final class CollectionCriterion extends Criterion {
 
-  private String property;
-  private CollectionOperator operator;
-  private Object[] values;
+  private final String property;
+  private final CollectionOperator operator;
+  private final Object[] values;
 
   /**
    * Constructs a {@link CollectionCriterion}.
@@ -46,7 +49,7 @@ public class CollectionCriterion extends Criterion {
    * @param operator
    *          a collection operator.
    * @param values
-   *          the collection of values acts as the other operand of the operator.
+   *          an array of values acts as the other operand of the operator.
    * @throws NullPointerException
    *           if {@code property} or {@code operator} or {@code values} is
    *           {@code null}.
@@ -62,24 +65,35 @@ public class CollectionCriterion extends Criterion {
   }
 
   /**
+   * Constructs a {@link CollectionCriterion}.
+   *
+   * @param property
+   *          the name of a property.
+   * @param operator
+   *          a collection operator.
+   * @param values
+   *          a collection of values acts as the other operand of the operator.
+   * @throws NullPointerException
+   *           if {@code property} or {@code operator} or {@code values} is
+   *           {@code null}.
+   * @throws IllegalArgumentException
+   *           if {@code values} is empty.
+   */
+  public CollectionCriterion(final String property,
+      final CollectionOperator operator, final Collection<?> values) {
+    super(CriterionType.COLLECTION);
+    this.property = requireNonEmpty("property", property);
+    this.operator = requireNonNull("operator", operator);
+    this.values = values.toArray();
+  }
+
+  /**
    * Gets the name of the property involved in this criterion.
    *
    * @return the name of the property involved in this criterion.
    */
   public String getProperty() {
     return property;
-  }
-
-  /**
-   * Sets the name of the property involved in this criterion.
-   *
-   * @param property
-   *          the name of the new property involved in this criterion.
-   * @throws NullPointerException
-   *           if {@code property} is {@code null}.
-   */
-  public void setProperty(final String property) {
-    this.property = requireNonEmpty("property", property);
   }
 
   /**
@@ -92,18 +106,6 @@ public class CollectionCriterion extends Criterion {
   }
 
   /**
-   * Sets the collection operator involved in this criterion.
-   *
-   * @param operator
-   *          the new collection operator involved in this criterion.
-   * @throws NullPointerException
-   *           if {@code operator} is {@code null}.
-   */
-  public void setOperator(final CollectionOperator operator) {
-    this.operator = requireNonNull("operator", operator);
-  }
-
-  /**
    * Gets the collection of values as the other operand of the binary operator,
    * which could be {@code null}.
    *
@@ -112,22 +114,6 @@ public class CollectionCriterion extends Criterion {
    */
   public Object[] getValues() {
     return values;
-  }
-
-  /**
-   * Sets the collection of values as the other operand of the binary operator,
-   * which could be {@code null}.
-   *
-   * @param values
-   *          the new collection of values as the other operand of the binary
-   *          operator, which could be {@code null}.
-   * @throws NullPointerException
-   *           if {@code values} is {@code null}.
-   * @throws IllegalArgumentException
-   *           if {@code values} is empty.
-   */
-  public void setValues(@Nullable final Object ... values) {
-    this.values = requireNonEmpty("value", values);
   }
 
   @Override

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package com.github.haixing_hu.criteria;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
 import com.github.haixing_hu.text.tostring.ToStringBuilder;
@@ -30,11 +32,12 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class LikeCriterion extends Criterion {
+@Immutable
+public final class LikeCriterion extends Criterion {
 
-  private String property;
-  private String value;
-  private MatchMode matchMode;
+  private final String property;
+  private final String value;
+  private final MatchMode matchMode;
 
   /**
    * Constructs a {@link LikeCriterion}.
@@ -72,18 +75,8 @@ public class LikeCriterion extends Criterion {
    * @return
    *    the name of the property.
    */
-  public final String getProperty() {
+  public String getProperty() {
     return property;
-  }
-
-  /**
-   * Sets the name of the property.
-   *
-   * @param property
-   *    the name of the new property.
-   */
-  public void setProperty(String property) {
-    this.property = requireNonEmpty("property", property);
   }
 
   /**
@@ -91,18 +84,8 @@ public class LikeCriterion extends Criterion {
    *
    * @return the value to be matched with the property value.
    */
-  public final String getValue() {
+  public String getValue() {
     return value;
-  }
-
-  /**
-   * Sets the value to be matched with the property value.
-   *
-   * @param value
-   *          the new value to be matched with the property value.
-   */
-  public final void setValue(String value) {
-    this.value = requireNonEmpty("value", value);
   }
 
   /**
@@ -110,18 +93,8 @@ public class LikeCriterion extends Criterion {
    *
    * @return the matching mode.
    */
-  public final MatchMode getMatchMode() {
+  public MatchMode getMatchMode() {
     return matchMode;
-  }
-
-  /**
-   * Sets the matching mode.
-   *
-   * @param matchMode
-   *          the new matching mode.
-   */
-  public final void setMatchMode(MatchMode matchMode) {
-    this.matchMode = requireNonNull("matchMode", matchMode);
   }
 
   @Override

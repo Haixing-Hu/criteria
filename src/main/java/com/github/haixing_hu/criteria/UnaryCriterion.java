@@ -17,6 +17,8 @@
  ******************************************************************************/
 package com.github.haixing_hu.criteria;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
 import com.github.haixing_hu.text.tostring.ToStringBuilder;
@@ -29,10 +31,11 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class UnaryCriterion extends Criterion {
+@Immutable
+public final class UnaryCriterion extends Criterion {
 
   private final UnaryOperator operator;
-  private String property;
+  private final String property;
 
   /**
    * Constructs a {@link UnaryCriterion}.
@@ -42,8 +45,7 @@ public class UnaryCriterion extends Criterion {
    * @param operator
    *          the unary operator.
    */
-  public UnaryCriterion(final String property,
-      final UnaryOperator operator) {
+  public UnaryCriterion(final String property, final UnaryOperator operator) {
     super(CriterionType.UNARY);
     this.operator = requireNonNull("operator", operator);
     this.property = requireNonNull("property", property);
@@ -54,18 +56,8 @@ public class UnaryCriterion extends Criterion {
    *
    * @return the name of the property involved in this criterion.
    */
-  public final String getProperty() {
+  public String getProperty() {
     return property;
-  }
-
-  /**
-   * Sets the name of the property involved in this criterion.
-   *
-   * @param proeprty
-   *    the name of the new property involved in this criterion.
-   */
-  public final void setProperty(String property) {
-    this.property = requireNonNull("property", property);
   }
 
   /**
@@ -73,18 +65,8 @@ public class UnaryCriterion extends Criterion {
    *
    * @return the unary operator involved in this criterion.
    */
-  public final UnaryOperator getOperator() {
+  public UnaryOperator getOperator() {
     return operator;
-  }
-
-  /**
-   * Sets the unary operator involved in this criterion.
-   *
-   * @param operator
-   *          the new unary operator involved in this criterion.
-   */
-  public final void setOperator(UnaryOperator operator) {
-    property = requireNonNull("property", property);
   }
 
   @Override

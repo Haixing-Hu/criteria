@@ -17,12 +17,15 @@
  ******************************************************************************/
 package com.github.haixing_hu.criteria;
 
+import java.util.Collection;
+
+import javax.annotation.concurrent.Immutable;
+
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
 import com.github.haixing_hu.text.tostring.ToStringBuilder;
 
-import static com.github.haixing_hu.lang.Argument.requireLengthAtLeast;
-import static com.github.haixing_hu.lang.Argument.requireNonNull;
+import static com.github.haixing_hu.lang.Argument.*;
 
 /**
  * A {@link CombinedCriterion} represents a criterion consists of logic
@@ -30,10 +33,11 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
-public class CombinedCriterion extends Criterion {
+@Immutable
+public final class CombinedCriterion extends Criterion {
 
-  private LogicOperator operator;
-  private Criterion[] criteria;
+  private final LogicOperator operator;
+  private final Criterion[] criteria;
 
   /**
    * Constructs a {@link CombinedCriterion}.
@@ -41,38 +45,46 @@ public class CombinedCriterion extends Criterion {
    * @param operator
    *          the logic operator.
    * @param criteria
-   *          sub-criteria involved in the logic combination.
+   *          an array of sub-criteria involved in the logic combination.
    * @throws NullPointerException
    *           if {@code operator} or {@code criteria} is {@code null}.
    * @throws IllegalArgumentException
    *           if {@code criteria} has less than 2 elements.
    */
-  public CombinedCriterion(final LogicOperator operator, final Criterion ... criteria) {
+  public CombinedCriterion(final LogicOperator operator,
+      final Criterion ... criteria) {
     super(CriterionType.COMBINED);
     this.operator = requireNonNull("operator", operator);
     this.criteria = requireLengthAtLeast("criteria", criteria, 2);
   }
 
+  /**
+   * Constructs a {@link CombinedCriterion}.
+   *
+   * @param operator
+   *          the logic operator.
+   * @param criteria
+   *          an array of sub-criteria involved in the logic combination.
+   * @throws NullPointerException
+   *           if {@code operator} or {@code criteria} is {@code null}.
+   * @throws IllegalArgumentException
+   *           if {@code criteria} has less than 2 elements.
+   */
+  public CombinedCriterion(final LogicOperator operator,
+      final Collection<Criterion> criteria) {
+    super(CriterionType.COMBINED);
+    this.operator = requireNonNull("operator", operator);
+    requireSizeAtLeast("criteria", criteria, 2);
+    this.criteria = criteria.toArray(new Criterion[0]);
+  }
 
   /**
    * Gets the logic operator involved in this criterion.
    *
    * @return the logic operator involved in this criterion.
    */
-  public final LogicOperator getOperator() {
+  public LogicOperator getOperator() {
     return operator;
-  }
-
-  /**
-   * Sets the logic operator involved in this criterion.
-   *
-   * @param operator
-   *          the new logic operator involved in this criterion.
-   * @throws NullPointerException
-   *           if {@code operator} is {@code null}.
-   */
-  public final void setOperator(final LogicOperator operator) {
-    this.operator = requireNonNull("operator", operator);
   }
 
   /**
@@ -81,22 +93,8 @@ public class CombinedCriterion extends Criterion {
    * @return
    *    the sub-criteria.
    */
-  public final Criterion[] getCriteria() {
+  public Criterion[] getCriteria() {
     return criteria;
-  }
-
-  /**
-   * Sets the sub-criteria.
-   *
-   * @param criteria
-   *          the new sub-criteria.
-   * @throws NullPointerException
-   *           if {@code criteria} is {@code null}.
-   * @throws IllegalArgumentException
-   *           if {@code criteria} has less than 2 elements.
-   */
-  public final void setCriteria(Criterion[] criteria) {
-    this.criteria = requireLengthAtLeast("criteria", criteria, 2);
   }
 
   @Override
