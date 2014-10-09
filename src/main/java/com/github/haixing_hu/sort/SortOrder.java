@@ -18,9 +18,10 @@
 
 package com.github.haixing_hu.sort;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.github.haixing_hu.lang.Equality;
 import com.github.haixing_hu.lang.Hash;
-import com.github.haixing_hu.lang.StringUtils;
 import com.github.haixing_hu.text.tostring.ToStringBuilder;
 
 import static com.github.haixing_hu.lang.Argument.requireNonNull;
@@ -30,6 +31,7 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  *
  * @author Haixing Hu
  */
+@Immutable
 public class SortOrder {
 
   /**
@@ -43,21 +45,9 @@ public class SortOrder {
   public static final NullHandlingStrategy DEFAULT_NULL_HANDLING_STRATEGY =
       NullHandlingStrategy.NATIVE;
 
-  private String property;
-  private SortDirection direction;
-  private NullHandlingStrategy nullHandlingStrategy;
-
-  /**
-   * Constructs a {@link SortOrder}.
-   * <p>
-   * The new {@link SortOrder} will have an empty property name, the ascending
-   * sorting direction, and the native null handling strategy.
-   */
-  public SortOrder() {
-    property = StringUtils.EMPTY;
-    direction = DEFAULT_DIRECTION;
-    nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
-  }
+  private final String property;
+  private final SortDirection direction;
+  private final NullHandlingStrategy nullHandlingStrategy;
 
   /**
    * Constructs a {@link SortOrder}.
@@ -127,17 +117,6 @@ public class SortOrder {
   }
 
   /**
-   * Sets the name of the property to be sorted.
-   *
-   * @param property
-   *          the new name of the property to be sorted, which cannot be
-   *          {@code null}.
-   */
-  public void setProperty(String property) {
-    this.property = requireNonNull("property", property);
-  }
-
-  /**
    * Gets the sorting direction.
    *
    * @return the sorting direction, which will never be {@code null}.
@@ -147,33 +126,12 @@ public class SortOrder {
   }
 
   /**
-   * Sets the sorting direction.
-   *
-   * @param direction
-   *          the new sorting direction to set, which cannot be {@code null}.
-   */
-  public void setDirection(SortDirection direction) {
-    this.direction = requireNonNull("direction", direction);
-  }
-
-  /**
    * Gets the null handling strategy.
    *
    * @return the nullHandlingStrategy, which will never be {@code null}.
    */
   public NullHandlingStrategy getNullHandlingStrategy() {
     return nullHandlingStrategy;
-  }
-
-  /**
-   * Sets the nullHandlingStrategy.
-   *
-   * @param nullHandlingStrategy
-   *          the new nullHandlingStrategy to set, which cannot be {@code null}.
-   */
-  public void setNullHandlingStrategy(NullHandlingStrategy nullHandlingStrategy) {
-    this.nullHandlingStrategy = requireNonNull("nullHandlingStrategy",
-        nullHandlingStrategy);
   }
 
   @Override
