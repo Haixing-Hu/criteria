@@ -31,7 +31,7 @@ import com.github.haixing_hu.criteria.MatchMode;
 import com.github.haixing_hu.criteria.UnaryCriterion;
 import com.github.haixing_hu.criteria.UnaryOperator;
 import com.github.haixing_hu.criteria.ValueCriterion;
-import com.github.haixing_hu.text.ParseException;
+import com.github.haixing_hu.text.ParsingException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -44,7 +44,7 @@ import static org.junit.Assert.fail;
 public class SqlCriterionParserTest {
 
   @Test
-  public void testParseUnaryCriterion() throws ParseException {
+  public void testParseUnaryCriterion() throws ParsingException {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final UnaryCriterion c1 = new UnaryCriterion("field1", UnaryOperator.NULL);
@@ -61,7 +61,7 @@ public class SqlCriterionParserTest {
   }
 
   @Test
-  public void testParseBinaryCriterion() throws ParseException  {
+  public void testParseBinaryCriterion() throws ParsingException  {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final BinaryCriterion c1 = new BinaryCriterion("field1",
@@ -90,7 +90,7 @@ public class SqlCriterionParserTest {
   }
 
   @Test
-  public void testParseValueCriterion() throws ParseException  {
+  public void testParseValueCriterion() throws ParsingException  {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final ValueCriterion c1 = new ValueCriterion("field1",
@@ -123,7 +123,7 @@ public class SqlCriterionParserTest {
   }
 
   @Test
-  public void testParseCollectionCriterion() throws ParseException  {
+  public void testParseCollectionCriterion() throws ParsingException  {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final CollectionCriterion c1 = new CollectionCriterion("field1",
@@ -152,7 +152,7 @@ public class SqlCriterionParserTest {
   }
 
   @Test
-  public void testParseLikeCriterion() throws ParseException  {
+  public void testParseLikeCriterion() throws ParsingException  {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final LikeCriterion c1 = new LikeCriterion("field1", "abc");
@@ -172,7 +172,7 @@ public class SqlCriterionParserTest {
   }
 
   @Test
-  public void testParseCombinedCriterion() throws ParseException  {
+  public void testParseCombinedCriterion() throws ParsingException  {
     final SqlCriterionParser parser = new SqlCriterionParser();
 
     final CombinedCriterion c1 = new CombinedCriterion(LogicOperator.AND,
@@ -198,21 +198,21 @@ public class SqlCriterionParserTest {
     try {
       parser.parse("hello world");
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
 
     try {
       parser.parse("1field = 123");
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
 
     try {
       parser.parse("field1 = 123 xx");
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
 
@@ -220,21 +220,21 @@ public class SqlCriterionParserTest {
       final Criterion criterion = parser.parse("field1 ! = 'abc'");
       System.err.println("criterion = " + criterion);
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
 
     try {
       parser.parse("field1 = \"xyz\"");
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
 
     try {
       parser.parse("(filed1 = 1) and (field2 > 3) or (field3 < 4)");
       fail("should throw");
-    } catch (final ParseException e) {
+    } catch (final ParsingException e) {
       //  pass
     }
     //  TODO

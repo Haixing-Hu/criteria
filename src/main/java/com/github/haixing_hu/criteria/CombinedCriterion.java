@@ -94,7 +94,7 @@ public final class CombinedCriterion extends Criterion {
    *    the sub-criteria.
    */
   public Criterion[] getCriteria() {
-    return criteria;
+    return criteria.clone();
   }
 
   @Override

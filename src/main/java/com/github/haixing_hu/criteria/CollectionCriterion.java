@@ -113,7 +113,7 @@ public final class CollectionCriterion extends Criterion {
    *         operator, which could be {@code null}.
    */
   public Object[] getValues() {
-    return values;
+    return values.clone();
   }
 
   @Override

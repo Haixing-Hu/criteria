@@ -28,7 +28,7 @@ import com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter;
 import com.github.haixing_hu.criteria.parser.sql.CriterionLexer;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParsingVisitor;
-import com.github.haixing_hu.text.ParseException;
+import com.github.haixing_hu.text.ParsingException;
 import com.github.haixing_hu.text.Parser;
 
 
@@ -43,7 +43,7 @@ import com.github.haixing_hu.text.Parser;
 public class SqlCriterionParser implements Parser<String, Criterion> {
 
   @Override
-  public Criterion parse(String input) throws ParseException {
+  public Criterion parse(String input) throws ParsingException {
     final ANTLRInputStream is = new ANTLRInputStream(input);
     final ThrowExceptionErrorListener listener = new ThrowExceptionErrorListener();
     final CriterionLexer lexer = new CriterionLexer(is);
@@ -58,11 +58,11 @@ public class SqlCriterionParser implements Parser<String, Criterion> {
       final CriterionParsingVisitor visitor = new CriterionParsingVisitor();
       final Criterion result = visitor.visit(tree);
       if (result == null) {
-        throw new ParseException(input, 0, "Failed to parse the SQL representation.");
+        throw new ParsingException(input, 0, "Failed to parse the SQL representation.");
       }
       return result;
     } catch (final AntlrParseException e) {
-      throw new ParseException(e.getInput(), e.getPosition(), e.getMessage());
+      throw new ParsingException(e.getInput(), e.getPosition(), e.getMessage());
     }
   }
 
