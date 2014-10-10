@@ -28,9 +28,9 @@ public enum UnaryOperator {
 
   NOT_NULL("IS NOT NULL");
 
-//  EMPTY,
+  //  EMPTY,
 
-//  NOT_EMPTY,
+  //  NOT_EMPTY,
 
   private String symbol;
 
@@ -45,27 +45,5 @@ public enum UnaryOperator {
    */
   public String symbol() {
     return symbol;
-  }
-
-  /**
-   * Gets the {@link UnaryOperator} corresponds to the specified symbol.
-   * <p>
-   * Note that the string comparison is case-insensitive.
-   *
-   * @param symbol
-   *          a specified symbol.
-   * @return the {@link UnaryOperator} corresponds to the specified symbol.
-   * @throws IllegalArgumentException
-   *           if the symbol does not corresponds to any unary operator.
-   */
-  public static UnaryOperator forSymbol(String symbol) {
-    symbol = symbol.toUpperCase();
-    if (symbol.equals(NULL.symbol())) {
-      return NULL;
-    } else if (symbol.equals(NOT_NULL.symbol())) {
-      return NOT_NULL;
-    }
-    throw new IllegalArgumentException(
-        "Invalid symbol for unary operator: " + symbol);
   }
 }

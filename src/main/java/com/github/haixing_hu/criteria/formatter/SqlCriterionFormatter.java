@@ -32,14 +32,24 @@ import com.github.haixing_hu.text.Formatter;
 
 /**
  * A formatter used to format a {@link Criterion} to a SQL statement.
+ * <p>
+ * <b>NOTE:</b> In order to distinguish between character literal and string
+ * literal, we make the following conventions:
+ * <ul>
+ * <li>the character literals are quoted by single quotation marks, and</li>
+ * <li>the string literals are quoted by double quotation marks.</li>
+ * </ul>
  *
  * @author Haixing Hu
  */
-public class SqlCriterionFormatter implements Formatter<Criterion, String> {
+public final class SqlCriterionFormatter implements
+    Formatter<Criterion, String> {
 
   public static final char BACKSLASH = '\\';
 
-  public static final char QUOTE = '\'';
+  public static final char SINGLE_QUOTE = '\'';
+
+  public static final char DOUBLE_QUOTE = '"';
 
   public static final char WILDCARD = '%';
 
@@ -47,7 +57,9 @@ public class SqlCriterionFormatter implements Formatter<Criterion, String> {
 
   public static final String BACKSLASH_STRING = "\\";
 
-  public static final String QUOTE_STRING = "'";
+  public static final String SINGLE_QUOTE_STRING = "'";
+
+  public static final String DOUBLE_QUOTE_STRING = "\"";
 
   public static final String WILDCARD_STRING = "%";
 
@@ -55,68 +67,62 @@ public class SqlCriterionFormatter implements Formatter<Criterion, String> {
 
   public static final String ESCAPED_BACKSLASH = "\\\\";
 
-  public static final String ESCAPED_QUOTE = "\\'";
+  public static final String ESCAPED_SINGLE_QUOTE = "\\'";
+
+  public static final String ESCAPED_DOUBLE_QUOTE = "\\\"";
 
   public static final String ESCAPED_WILDCARD = "\\%";
 
   public static final String LIKE = "LIKE";
 
   @Override
-  public String format(Criterion criterion) {
+  public String format(final Criterion criterion) {
     switch (criterion.getType()) {
       case UNARY:
-        return formatUnaryCriterion((UnaryCriterion) criterion);
+        return formatUnary((UnaryCriterion) criterion);
       case BINARY:
-        return formatBinaryCriterion((BinaryCriterion) criterion);
+        return formatBinary((BinaryCriterion) criterion);
       case VALUE:
-        return formatValueCriterion((ValueCriterion) criterion);
+        return formatValue((ValueCriterion) criterion);
       case COLLECTION:
-        return formatCollectionCriterion((CollectionCriterion) criterion);
+        return formatCollection((CollectionCriterion) criterion);
       case LIKE:
-        return formatLikeCriterion((LikeCriterion) criterion);
+        return formatLike((LikeCriterion) criterion);
       case COMBINED:
-        return formatCombinedCriterion((CombinedCriterion) criterion);
+        return formatCombined((CombinedCriterion) criterion);
       default:
         return null;
     }
   }
 
-  private String formatUnaryCriterion(UnaryCriterion criterion) {
+  private String formatUnary(final UnaryCriterion criterion) {
     final StringBuilder builder = new StringBuilder();
-    builder.append(criterion.getProperty())
-           .append(' ')
-           .append(criterion.getOperator().symbol());
+    builder.append(criterion.getProperty()).append(' ')
+    .append(criterion.getOperator().symbol());
     return builder.toString();
   }
 
-  private String formatBinaryCriterion(BinaryCriterion criterion) {
+  private String formatBinary(final BinaryCriterion criterion) {
     final StringBuilder sql = new StringBuilder();
-    sql.append(criterion.getLeftProperty())
-       .append(' ')
-       .append(criterion.getOperator().symbol())
-       .append(' ')
-       .append(criterion.getRightProperty());
+    sql.append(criterion.getLeftProperty()).append(' ')
+    .append(criterion.getOperator().symbol()).append(' ')
+    .append(criterion.getRightProperty());
     return sql.toString();
   }
 
-  private String formatValueCriterion(ValueCriterion criterion) {
+  private String formatValue(final ValueCriterion criterion) {
     final StringBuilder builder = new StringBuilder();
     final Object value = criterion.getValue();
-    builder.append(criterion.getProperty())
-           .append(' ')
-           .append(criterion.getOperator().symbol())
-           .append(' ');
+    builder.append(criterion.getProperty()).append(' ')
+    .append(criterion.getOperator().symbol()).append(' ');
     appendValue(value, builder);
     return builder.toString();
   }
 
-  private String formatCollectionCriterion(CollectionCriterion criterion) {
+  private String formatCollection(final CollectionCriterion criterion) {
     final StringBuilder builder = new StringBuilder();
-    builder.append(criterion.getProperty())
-           .append(' ')
-           .append(criterion.getOperator().symbol())
-           .append(' ')
-           .append('(');
+    builder.append(criterion.getProperty()).append(' ')
+    .append(criterion.getOperator().symbol()).append(' ').append('(');
     final Object[] values = criterion.getValues();
     for (int i = 0; i < values.length; ++i) {
       if (i > 0) {
@@ -128,42 +134,36 @@ public class SqlCriterionFormatter implements Formatter<Criterion, String> {
     return builder.toString();
   }
 
-  private String formatLikeCriterion(LikeCriterion criterion) {
+  private String formatLike(final LikeCriterion criterion) {
     final StringBuilder builder = new StringBuilder();
-    builder.append(criterion.getProperty())
-           .append(' ');
+    builder.append(criterion.getProperty()).append(' ');
     appendLikePattern(criterion.getValue(), criterion.getMatchMode(), builder);
     return builder.toString();
   }
 
-  private String formatCombinedCriterion(CombinedCriterion criterion) {
+  private String formatCombined(final CombinedCriterion criterion) {
     boolean first = true;
     final StringBuilder builder = new StringBuilder();
     final LogicOperator operator = criterion.getOperator();
     final Criterion[] criteria = criterion.getCriteria();
     for (final Criterion c : criteria) {
       if (first) {
-        builder.append('(')
-               .append(format(c))
-               .append(')');
+        builder.append('(').append(format(c)).append(')');
         first = false;
       } else {
-        builder.append(' ')
-               .append(operator.symbol())
-               .append(' ')
-               .append('(')
-               .append(format(c))
-               .append(')');
+        builder.append(' ').append(operator.symbol()).append(' ').append('(')
+        .append(format(c)).append(')');
       }
     }
     return builder.toString();
   }
 
-  private void appendValue(@Nullable Object value, StringBuilder builder) {
+  private void appendValue(@Nullable final Object value,
+      final StringBuilder builder) {
     if (value == null) {
       builder.append(PLACEHOLDER);
     } else if (value instanceof Character) {
-      appendCharLiteral((Character) value, builder);
+      appendCharacterLiteral((Character) value, builder);
     } else if (value instanceof String) {
       appendStringLiteral((String) value, builder);
     } else {
@@ -171,56 +171,53 @@ public class SqlCriterionFormatter implements Formatter<Criterion, String> {
     }
   }
 
-  private void appendCharLiteral(Character value, StringBuilder builder) {
-    if (value == QUOTE) {
-      builder.append(QUOTE)
-             .append(ESCAPED_QUOTE)
-             .append(QUOTE);
+  private void appendCharacterLiteral(final Character value,
+      final StringBuilder builder) {
+    if (value == SINGLE_QUOTE) {
+      builder.append(SINGLE_QUOTE).append(ESCAPED_SINGLE_QUOTE).append(SINGLE_QUOTE);
     } else {
-      builder.append(QUOTE)
-             .append(value)
-             .append(QUOTE);
+      builder.append(SINGLE_QUOTE).append(value).append(SINGLE_QUOTE);
     }
   }
 
-  private void appendStringLiteral(String value, StringBuilder builder) {
+  private void appendStringLiteral(final String value,
+      final StringBuilder builder) {
     String result = value.replace(BACKSLASH_STRING, ESCAPED_BACKSLASH);
-    result = result.replace(QUOTE_STRING, ESCAPED_QUOTE);
-    builder.append(QUOTE)
-           .append(result)
-           .append(QUOTE);
+    result = result.replace(DOUBLE_QUOTE_STRING, ESCAPED_DOUBLE_QUOTE);
+    builder.append(DOUBLE_QUOTE).append(result).append(DOUBLE_QUOTE);
   }
 
-  private void appendLikePattern(String value, MatchMode mode, StringBuilder builder) {
-    value = value.replace(BACKSLASH_STRING, ESCAPED_BACKSLASH);
-    value = value.replace(QUOTE_STRING, ESCAPED_QUOTE);
-    value = value.replace(WILDCARD_STRING, ESCAPED_WILDCARD);
+  private void appendLikePattern(final String value, final MatchMode mode,
+      final StringBuilder builder) {
+    String str = value.replace(BACKSLASH_STRING, ESCAPED_BACKSLASH);
+    str = str.replace(DOUBLE_QUOTE_STRING, ESCAPED_DOUBLE_QUOTE);
+    str = str.replace(WILDCARD_STRING, ESCAPED_WILDCARD);
     switch (mode) {
       case START:
         builder.append(LIKE)
                .append(' ')
-               .append(QUOTE)
-               .append(value)
+               .append(DOUBLE_QUOTE)
+               .append(str)
                .append(WILDCARD)
-               .append(QUOTE);
+               .append(DOUBLE_QUOTE);
         break;
       case END:
         builder.append(LIKE)
                .append(' ')
-               .append(QUOTE)
+               .append(DOUBLE_QUOTE)
                .append(WILDCARD)
-               .append(value)
-               .append(QUOTE);
+               .append(str)
+               .append(DOUBLE_QUOTE);
         break;
       case ANYWHERE:
       default:
         builder.append(LIKE)
                .append(' ')
-               .append(QUOTE)
+               .append(DOUBLE_QUOTE)
                .append(WILDCARD)
-               .append(value)
+               .append(str)
                .append(WILDCARD)
-               .append(QUOTE);
+               .append(DOUBLE_QUOTE);
         break;
     }
   }

@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Haixing Hu
  */
-public class SqlCriterionFormatterTest {
+public final class SqlCriterionFormatterTest {
 
   @Test
   public void testFormatUnitaryCriterion() {
@@ -47,7 +47,8 @@ public class SqlCriterionFormatterTest {
     final UnaryCriterion c1 = new UnaryCriterion("field1", UnaryOperator.NULL);
     assertEquals("field1 IS NULL", formatter.format(c1));
 
-    final UnaryCriterion c2 = new UnaryCriterion("field2", UnaryOperator.NOT_NULL);
+    final UnaryCriterion c2 = new UnaryCriterion("field2",
+        UnaryOperator.NOT_NULL);
     assertEquals("field2 IS NOT NULL", formatter.format(c2));
   }
 
@@ -55,22 +56,28 @@ public class SqlCriterionFormatterTest {
   public void testFormatBinaryCriterion() {
     final SqlCriterionFormatter formatter = new SqlCriterionFormatter();
 
-    final BinaryCriterion c1 = new BinaryCriterion("field1", BinaryOperator.EQUAL, "field2");
+    final BinaryCriterion c1 = new BinaryCriterion("field1",
+        BinaryOperator.EQUAL, "field2");
     assertEquals("field1 = field2", formatter.format(c1));
 
-    final BinaryCriterion c2 = new BinaryCriterion("field1", BinaryOperator.GREATER, "field2");
+    final BinaryCriterion c2 = new BinaryCriterion("field1",
+        BinaryOperator.GREATER, "field2");
     assertEquals("field1 > field2", formatter.format(c2));
 
-    final BinaryCriterion c3 = new BinaryCriterion("field1", BinaryOperator.GREATER_EQUAL, "field2");
+    final BinaryCriterion c3 = new BinaryCriterion("field1",
+        BinaryOperator.GREATER_EQUAL, "field2");
     assertEquals("field1 >= field2", formatter.format(c3));
 
-    final BinaryCriterion c4 = new BinaryCriterion("field1", BinaryOperator.LESS, "field2");
+    final BinaryCriterion c4 = new BinaryCriterion("field1",
+        BinaryOperator.LESS, "field2");
     assertEquals("field1 < field2", formatter.format(c4));
 
-    final BinaryCriterion c5 = new BinaryCriterion("field1", BinaryOperator.LESS_EQUAL, "field2");
+    final BinaryCriterion c5 = new BinaryCriterion("field1",
+        BinaryOperator.LESS_EQUAL, "field2");
     assertEquals("field1 <= field2", formatter.format(c5));
 
-    final BinaryCriterion c6 = new BinaryCriterion("field1", BinaryOperator.NOT_EQUAL, "field2");
+    final BinaryCriterion c6 = new BinaryCriterion("field1",
+        BinaryOperator.NOT_EQUAL, "field2");
     assertEquals("field1 != field2", formatter.format(c6));
   }
 
@@ -78,28 +85,36 @@ public class SqlCriterionFormatterTest {
   public void testFormatValueCriterion() {
     final SqlCriterionFormatter formatter = new SqlCriterionFormatter();
 
-    final ValueCriterion c1 = new ValueCriterion("field1", BinaryOperator.EQUAL, true);
+    final ValueCriterion c1 = new ValueCriterion("field1",
+        BinaryOperator.EQUAL, true);
     assertEquals("field1 = true", formatter.format(c1));
 
-    final ValueCriterion c2 = new ValueCriterion("field1", BinaryOperator.GREATER, 3.14);
+    final ValueCriterion c2 = new ValueCriterion("field1",
+        BinaryOperator.GREATER, 3.14);
     assertEquals("field1 > 3.14", formatter.format(c2));
 
-    final ValueCriterion c3 = new ValueCriterion("field1", BinaryOperator.GREATER_EQUAL, null);
+    final ValueCriterion c3 = new ValueCriterion("field1",
+        BinaryOperator.GREATER_EQUAL, null);
     assertEquals("field1 >= ?", formatter.format(c3));
 
-    final ValueCriterion c4 = new ValueCriterion("field1", BinaryOperator.LESS, -128);
+    final ValueCriterion c4 = new ValueCriterion("field1", BinaryOperator.LESS,
+        -128);
     assertEquals("field1 < -128", formatter.format(c4));
 
-    final ValueCriterion c5 = new ValueCriterion("field1", BinaryOperator.LESS_EQUAL, "\\a'b%c");
-    assertEquals("field1 <= '\\\\a\\\'b%c'", formatter.format(c5));
+    final ValueCriterion c5 = new ValueCriterion("field1",
+        BinaryOperator.LESS_EQUAL, "\\a\"b%c");
+    assertEquals("field1 <= \"\\\\a\\\"b%c\"", formatter.format(c5));
 
-    final ValueCriterion c6 = new ValueCriterion("field1", BinaryOperator.NOT_EQUAL, 'd');
+    final ValueCriterion c6 = new ValueCriterion("field1",
+        BinaryOperator.NOT_EQUAL, 'd');
     assertEquals("field1 != 'd'", formatter.format(c6));
 
-    final ValueCriterion c7 = new ValueCriterion("field1", BinaryOperator.LESS, 'c');
+    final ValueCriterion c7 = new ValueCriterion("field1", BinaryOperator.LESS,
+        'c');
     assertEquals("field1 < 'c'", formatter.format(c7));
 
-    final ValueCriterion c8 = new ValueCriterion("field1", BinaryOperator.LESS, '\'');
+    final ValueCriterion c8 = new ValueCriterion("field1", BinaryOperator.LESS,
+        '\'');
     assertEquals("field1 < '\\''", formatter.format(c8));
   }
 
@@ -113,7 +128,7 @@ public class SqlCriterionFormatterTest {
 
     final CollectionCriterion c2 = new CollectionCriterion("field1",
         CollectionOperator.NOT_IN, 'a', "xxb", 'c');
-    assertEquals("field1 NOT IN ('a', 'xxb', 'c')", formatter.format(c2));
+    assertEquals("field1 NOT IN ('a', \"xxb\", 'c')", formatter.format(c2));
 
     final CollectionCriterion c3 = new CollectionCriterion("field1",
         CollectionOperator.NOT_IN, 'a', null, 123);
@@ -125,19 +140,22 @@ public class SqlCriterionFormatterTest {
     final SqlCriterionFormatter formatter = new SqlCriterionFormatter();
 
     final LikeCriterion c1 = new LikeCriterion("field1", "abc");
-    assertEquals("field1 LIKE '%abc%'", formatter.format(c1));
+    assertEquals("field1 LIKE \"%abc%\"", formatter.format(c1));
 
-    final LikeCriterion c2 = new LikeCriterion("field1", "de%f", MatchMode.START);
-    assertEquals("field1 LIKE 'de\\%f%'", formatter.format(c2));
+    final LikeCriterion c2 = new LikeCriterion("field1", "de%f",
+        MatchMode.START);
+    assertEquals("field1 LIKE \"de\\%f%\"", formatter.format(c2));
 
     final LikeCriterion c3 = new LikeCriterion("field1", "a%c", MatchMode.END);
-    assertEquals("field1 LIKE '%a\\%c'", formatter.format(c3));
+    assertEquals("field1 LIKE \"%a\\%c\"", formatter.format(c3));
 
-    final LikeCriterion c4 = new LikeCriterion("field1", "xyz", MatchMode.ANYWHERE);
-    assertEquals("field1 LIKE '%xyz%'", formatter.format(c4));
+    final LikeCriterion c4 = new LikeCriterion("field1", "xyz",
+        MatchMode.ANYWHERE);
+    assertEquals("field1 LIKE \"%xyz%\"", formatter.format(c4));
 
-    final LikeCriterion c5 = new LikeCriterion("field1", "x'y\\z%", MatchMode.ANYWHERE);
-    assertEquals("field1 LIKE '%x\\\'y\\\\z\\%%'", formatter.format(c5));
+    final LikeCriterion c5 = new LikeCriterion("field1", "x\"y\\z%",
+        MatchMode.ANYWHERE);
+    assertEquals("field1 LIKE \"%x\\\"y\\\\z\\%%\"", formatter.format(c5));
   }
 
   @Test
@@ -153,12 +171,11 @@ public class SqlCriterionFormatterTest {
         new CombinedCriterion(LogicOperator.AND,
             new ValueCriterion("field1", BinaryOperator.GREATER, 123),
             new ValueCriterion("field1", BinaryOperator.LESS, 456)),
-       new BinaryCriterion("field1", BinaryOperator.EQUAL, "field2"),
-       new CollectionCriterion("field3", CollectionOperator.IN, 1, 2, 3));
+            new BinaryCriterion("field1", BinaryOperator.EQUAL, "field2"),
+            new CollectionCriterion("field3", CollectionOperator.IN, 1, 2, 3));
     assertEquals("((field1 > 123) AND (field1 < 456)) OR "
-        + "(field1 = field2) OR "
-        + "(field3 IN (1, 2, 3))", formatter.format(c2));
+        + "(field1 = field2) OR " + "(field3 IN (1, 2, 3))",
+        formatter.format(c2));
   }
-
 
 }

@@ -30,8 +30,8 @@ public class AntlrParseException extends RuntimeException {
   private final int line;
   private final int position;
 
-  public AntlrParseException(String input, int line, int position,
-      String message) {
+  public AntlrParseException(final String input, final int line,
+      final int position, final String message) {
     super(message);
     this.input = input;
     this.line = line;
@@ -43,7 +43,7 @@ public class AntlrParseException extends RuntimeException {
    *
    * @return the input.
    */
-  public String getInput() {
+  public final String getInput() {
     return input;
   }
 
@@ -52,7 +52,7 @@ public class AntlrParseException extends RuntimeException {
    *
    * @return the line.
    */
-  public int getLine() {
+  public final int getLine() {
     return line;
   }
 
@@ -61,7 +61,7 @@ public class AntlrParseException extends RuntimeException {
    *
    * @return the position.
    */
-  public int getPosition() {
+  public final int getPosition() {
     return position;
   }
 }

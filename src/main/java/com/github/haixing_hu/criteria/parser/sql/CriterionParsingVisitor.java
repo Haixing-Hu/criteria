@@ -44,17 +44,28 @@ import com.github.haixing_hu.criteria.parser.sql.CriterionParser.UnaryCriterionC
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser.ValueContext;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser.ValueCriterionContext;
 
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.*;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.BACKSLASH_STRING;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.DOUBLE_QUOTE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.DOUBLE_QUOTE_STRING;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_BACKSLASH;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_DOUBLE_QUOTE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_SINGLE_QUOTE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_WILDCARD;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.SINGLE_QUOTE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.SINGLE_QUOTE_STRING;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.WILDCARD;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.WILDCARD_STRING;
 
 /**
- * A visitor used to parse
+ * A visitor used to parse.
  *
  * @author Haixing Hu
  */
-public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
+public final class CriterionParsingVisitor extends
+    CriterionBaseVisitor<Criterion> {
 
   @Override
-  public Criterion visitLikeCriterion(LikeCriterionContext ctx) {
+  public Criterion visitLikeCriterion(final LikeCriterionContext ctx) {
     final String property = ctx.property().getText();
     String pattern = parseStringValue(ctx.pattern().getText());
     pattern = pattern.replace(ESCAPED_WILDCARD, WILDCARD_STRING);
@@ -78,7 +89,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
   }
 
   @Override
-  public Criterion visitBinaryCriterion(BinaryCriterionContext ctx) {
+  public Criterion visitBinaryCriterion(final BinaryCriterionContext ctx) {
     final List<PropertyContext> propertyCtxes = ctx.property();
     final String leftProperty = propertyCtxes.get(0).getText();
     final BinaryOperator operator = parseBinaryOperator(ctx.operator);
@@ -87,7 +98,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
   }
 
   @Override
-  public Criterion visitValueCriterion(ValueCriterionContext ctx) {
+  public Criterion visitValueCriterion(final ValueCriterionContext ctx) {
     final String property = ctx.property().getText();
     final BinaryOperator operator = parseBinaryOperator(ctx.operator);
     final Object value = parseValue(ctx.value());
@@ -95,7 +106,8 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
   }
 
   @Override
-  public Criterion visitCollectionCriterion(CollectionCriterionContext ctx) {
+  public Criterion visitCollectionCriterion(
+      final CollectionCriterionContext ctx) {
     final String property = ctx.property().getText();
     final CollectionOperator operator = parseCollectionOperator(ctx.operator);
     final List<ValueContext> valueContexts = ctx.value();
@@ -103,19 +115,19 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     for (final ValueContext context : valueContexts) {
       values.add(parseValue(context));
     }
-    return new CollectionCriterion(property, operator, values.toArray(new Object[0]));
+    return new CollectionCriterion(property, operator,
+        values.toArray(new Object[0]));
   }
 
-
   @Override
-  public Criterion visitUnaryCriterion(UnaryCriterionContext ctx) {
+  public Criterion visitUnaryCriterion(final UnaryCriterionContext ctx) {
     final String property = ctx.property().getText();
     final UnaryOperator operator = parseUnaryOperator(ctx.operator);
     return new UnaryCriterion(property, operator);
   }
 
   @Override
-  public Criterion visitCombinedCriterion(CombinedCriterionContext ctx) {
+  public Criterion visitCombinedCriterion(final CombinedCriterionContext ctx) {
     final List<CriterionContext> criteriaContexts = ctx.criterion();
     final LogicOperator operator = parseLogicOperator(ctx.operator);
     final List<Criterion> criteria = new ArrayList<Criterion>();
@@ -125,7 +137,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     return new CombinedCriterion(operator, criteria.toArray(new Criterion[0]));
   }
 
-  private UnaryOperator parseUnaryOperator(Token token) {
+  private UnaryOperator parseUnaryOperator(final Token token) {
     switch (token.getType()) {
       case CriterionParser.IS_NULL:
         return UnaryOperator.NULL;
@@ -137,7 +149,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     }
   }
 
-  private BinaryOperator parseBinaryOperator(Token token) {
+  private BinaryOperator parseBinaryOperator(final Token token) {
     switch (token.getType()) {
       case CriterionParser.EQUAL:
         return BinaryOperator.EQUAL;
@@ -157,7 +169,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     }
   }
 
-  private CollectionOperator parseCollectionOperator(Token token) {
+  private CollectionOperator parseCollectionOperator(final Token token) {
     switch (token.getType()) {
       case CriterionParser.IN:
         return CollectionOperator.IN;
@@ -169,7 +181,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     }
   }
 
-  private LogicOperator parseLogicOperator(Token token) {
+  private LogicOperator parseLogicOperator(final Token token) {
     switch (token.getType()) {
       case CriterionParser.AND:
         return LogicOperator.AND;
@@ -181,7 +193,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     }
   }
 
-  private Object parseValue(ValueContext ctx) {
+  private Object parseValue(final ValueContext ctx) {
     final String valueString = ctx.getText();
     switch (ctx.type.getType()) {
       case CriterionParser.INTEGER_NUMBER:
@@ -194,6 +206,8 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
         return Boolean.valueOf(valueString);
       case CriterionParser.PLACEHOLDER:
         return null;
+      case CriterionParser.CHARACTER:
+        return parseCharacterValue(valueString);
       case CriterionParser.STRING:
         return parseStringValue(valueString);
       default:
@@ -202,13 +216,35 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     }
   }
 
-  private String parseStringValue(String str) {
+  private Character parseCharacterValue(final String str) {
     final int n = str.length();
     if (n < 2) {
       throw new IllegalArgumentException(
           "Invalid string value representation: " + str);
     }
-    if ((str.charAt(0) != QUOTE) || (str.charAt(n-1) != QUOTE)) {
+    if ((str.charAt(0) != SINGLE_QUOTE) || (str.charAt(n - 1) != SINGLE_QUOTE)) {
+      throw new IllegalArgumentException(
+          "Invalid quoted character value: " + str);
+    }
+    //  strip quotes
+    String result = str.substring(1, n - 1);
+    //  replace escaped quotes
+    // result = result.replace(ESCAPED_BACKSLASH, BACKSLASH_STRING);
+    result = result.replace(ESCAPED_SINGLE_QUOTE, SINGLE_QUOTE_STRING);
+    if (result.length() != 1) {
+      throw new IllegalArgumentException(
+          "Invalid quoted character value: " + str);
+    }
+    return Character.valueOf(result.charAt(0));
+  }
+
+  private String parseStringValue(final String str) {
+    final int n = str.length();
+    if (n < 2) {
+      throw new IllegalArgumentException(
+          "Invalid string value representation: " + str);
+    }
+    if ((str.charAt(0) != DOUBLE_QUOTE) || (str.charAt(n - 1) != DOUBLE_QUOTE)) {
       throw new IllegalArgumentException(
           "Invalid quoted string value: " + str);
     }
@@ -216,7 +252,7 @@ public class CriterionParsingVisitor extends CriterionBaseVisitor<Criterion> {
     String result = str.substring(1, n - 1);
     //  replace escaped quotes
     result = result.replace(ESCAPED_BACKSLASH, BACKSLASH_STRING);
-    result = result.replace(ESCAPED_QUOTE, QUOTE_STRING);
+    result = result.replace(ESCAPED_DOUBLE_QUOTE, DOUBLE_QUOTE_STRING);
     return result;
   }
 }

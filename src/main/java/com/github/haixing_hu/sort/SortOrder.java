@@ -20,9 +20,9 @@ package com.github.haixing_hu.sort;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.github.haixing_hu.lang.Equality;
-import com.github.haixing_hu.lang.Hash;
-import com.github.haixing_hu.text.tostring.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import static com.github.haixing_hu.lang.Argument.requireNonNull;
 
@@ -32,7 +32,7 @@ import static com.github.haixing_hu.lang.Argument.requireNonNull;
  * @author Haixing Hu
  */
 @Immutable
-public class SortOrder {
+public final class SortOrder {
 
   /**
    * The default sorting direction.
@@ -59,7 +59,7 @@ public class SortOrder {
    *          the name of the property to be sorted, which cannot be
    *          {@code null}.
    */
-  public SortOrder(String property) {
+  public SortOrder(final String property) {
     this.property = requireNonNull("property", property);
     direction = DEFAULT_DIRECTION;
     nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
@@ -77,7 +77,7 @@ public class SortOrder {
    * @param direction
    *          the sorting direction, which cannot be {@code null}.
    */
-  public SortOrder(String property, SortDirection direction) {
+  public SortOrder(final String property, final SortDirection direction) {
     this.property = requireNonNull("property", property);
     this.direction = requireNonNull("direction", direction);
     nullHandlingStrategy = DEFAULT_NULL_HANDLING_STRATEGY;
@@ -98,8 +98,8 @@ public class SortOrder {
    *          the {@code null} values handling strategy, which cannot be
    *          {@code null}.
    */
-  public SortOrder(String property, SortDirection direction,
-      NullHandlingStrategy nullHandlingStrategy) {
+  public SortOrder(final String property, final SortDirection direction,
+      final NullHandlingStrategy nullHandlingStrategy) {
     this.property = requireNonNull("property", property);
     this.direction = requireNonNull("direction", direction);
     this.nullHandlingStrategy = requireNonNull("nullHandlingStrategy",
@@ -136,38 +136,16 @@ public class SortOrder {
 
   @Override
   public int hashCode() {
-    final int multiplier = 13;
-    int code = 7;
-    code = Hash.combine(code, multiplier, property);
-    code = Hash.combine(code, multiplier, direction);
-    code = Hash.combine(code, multiplier, nullHandlingStrategy);
-    return code;
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final SortOrder other = (SortOrder) obj;
-    return (direction == other.direction)
-        && (nullHandlingStrategy == other.nullHandlingStrategy)
-        && Equality.equals(property, other.property);
+  public boolean equals(final Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this)
-                .append("property", property)
-                .append("direction", direction)
-                .append("nullHandlingStrategy", nullHandlingStrategy)
-                .toString();
+    return ToStringBuilder.reflectionToString(this);
   }
-
 }

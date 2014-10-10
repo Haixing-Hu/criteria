@@ -27,7 +27,7 @@ import com.github.haixing_hu.lang.Cloneable;
  */
 public abstract class Criterion implements Cloneable<Criterion> {
 
-  protected CriterionType type;
+  private final CriterionType type;
 
   /**
    * Constructs a {@link Criterion}.

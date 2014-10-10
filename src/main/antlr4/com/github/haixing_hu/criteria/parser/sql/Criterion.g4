@@ -68,6 +68,7 @@ value:
   		| HEX_NUMBER
   		| REAL_NUMBER
   		| BOOLEAN
+  		| CHARACTER
   		| STRING
   		| PLACEHOLDER)
 ;
@@ -125,12 +126,15 @@ OR: O R;
 
 LIKE: L I K E;
 
-fragment SINGLE_QUOTE_ESCAPE: '\\\\' | '\\\'';
 fragment DOUBLE_QUOTE_ESCAPE: '\\\\' | '\\"';
 fragment NON_LINE_BREAK: ~('\n' | '\r');
 STRING:
-	'\'' ( SINGLE_QUOTE_ESCAPE | NON_LINE_BREAK )*? '\''
-;
+	'"' ( DOUBLE_QUOTE_ESCAPE | NON_LINE_BREAK )*? '"';
+
+fragment SINGLE_QUOTE_ESCAPE: '\\\'';
+fragment NON_SINGLE_QUOTE:  ~('\'');
+CHARACTER:
+	'\'' (SINGLE_QUOTE_ESCAPE | NON_SINGLE_QUOTE ) '\''; 
 
 BOOLEAN:
 	T R U E

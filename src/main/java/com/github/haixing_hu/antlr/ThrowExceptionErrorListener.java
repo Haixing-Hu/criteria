@@ -36,8 +36,10 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class ThrowExceptionErrorListener extends BaseErrorListener {
 
   @Override
-  public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
-      int line, int charPositionInLine, String msg, RecognitionException e) {
+  public final void syntaxError(final Recognizer<?, ?> recognizer,
+      final Object offendingSymbol, final int line,
+      final int charPositionInLine, final String msg,
+      final RecognitionException e) {
     String input;
     if (recognizer instanceof Lexer) {
       final CharStream cs = ((Lexer) recognizer).getInputStream();

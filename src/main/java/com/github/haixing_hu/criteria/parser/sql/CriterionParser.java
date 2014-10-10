@@ -19,13 +19,14 @@ public class CriterionParser extends Parser {
 	public static final int
 		T__2=1, T__1=2, T__0=3, IS=4, NOT=5, NULL=6, IS_NULL=7, IS_NOT_NULL=8, 
 		EQUAL=9, NOT_EQUAL=10, GREATER=11, GREATER_EQUAL=12, LESS=13, LESS_EQUAL=14, 
-		IN=15, NOT_IN=16, AND=17, OR=18, LIKE=19, STRING=20, BOOLEAN=21, PLACEHOLDER=22, 
-		ID=23, INTEGER_NUMBER=24, HEX_NUMBER=25, REAL_NUMBER=26, SPACE=27, WHITE_SPACE=28;
+		IN=15, NOT_IN=16, AND=17, OR=18, LIKE=19, STRING=20, CHARACTER=21, BOOLEAN=22, 
+		PLACEHOLDER=23, ID=24, INTEGER_NUMBER=25, HEX_NUMBER=26, REAL_NUMBER=27, 
+		SPACE=28, WHITE_SPACE=29;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'('", "')'", "','", "IS", "NOT", "NULL", "IS_NULL", "IS_NOT_NULL", 
 		"'='", "'!='", "'>'", "'>='", "'<'", "'<='", "IN", "NOT_IN", "AND", "OR", 
-		"LIKE", "STRING", "BOOLEAN", "'?'", "ID", "INTEGER_NUMBER", "HEX_NUMBER", 
-		"REAL_NUMBER", "SPACE", "WHITE_SPACE"
+		"LIKE", "STRING", "CHARACTER", "BOOLEAN", "'?'", "ID", "INTEGER_NUMBER", 
+		"HEX_NUMBER", "REAL_NUMBER", "SPACE", "WHITE_SPACE"
 	};
 	public static final int
 		RULE_line = 0, RULE_criterion = 1, RULE_unaryCriterion = 2, RULE_binaryCriterion = 3, 
@@ -660,6 +661,7 @@ public class CriterionParser extends Parser {
 		public Token type;
 		public TerminalNode HEX_NUMBER() { return getToken(CriterionParser.HEX_NUMBER, 0); }
 		public TerminalNode REAL_NUMBER() { return getToken(CriterionParser.REAL_NUMBER, 0); }
+		public TerminalNode CHARACTER() { return getToken(CriterionParser.CHARACTER, 0); }
 		public TerminalNode STRING() { return getToken(CriterionParser.STRING, 0); }
 		public TerminalNode BOOLEAN() { return getToken(CriterionParser.BOOLEAN, 0); }
 		public TerminalNode PLACEHOLDER() { return getToken(CriterionParser.PLACEHOLDER, 0); }
@@ -693,7 +695,7 @@ public class CriterionParser extends Parser {
 			setState(99);
 			((ValueContext)_localctx).type = _input.LT(1);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << STRING) | (1L << BOOLEAN) | (1L << PLACEHOLDER) | (1L << INTEGER_NUMBER) | (1L << HEX_NUMBER) | (1L << REAL_NUMBER))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << STRING) | (1L << CHARACTER) | (1L << BOOLEAN) | (1L << PLACEHOLDER) | (1L << INTEGER_NUMBER) | (1L << HEX_NUMBER) | (1L << REAL_NUMBER))) != 0)) ) {
 				((ValueContext)_localctx).type = (Token)_errHandler.recoverInline(this);
 			}
 			consume();
@@ -752,7 +754,7 @@ public class CriterionParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\36j\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\37j\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3\"\n\3\3\4\3\4\3\4\3\5\3"+
 		"\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\7\7\65\n\7\f\7\16\7"+
@@ -760,7 +762,7 @@ public class CriterionParser extends Parser {
 		"\3\t\3\t\7\tL\n\t\f\t\16\tO\13\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3"+
 		"\t\3\t\3\t\7\t]\n\t\f\t\16\t`\13\t\5\tb\n\t\3\n\3\n\3\13\3\13\3\f\3\f"+
 		"\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\6\3\2\t\n\3\2\13\20\3\2\21\22"+
-		"\4\2\26\30\32\34g\2\30\3\2\2\2\4!\3\2\2\2\6#\3\2\2\2\b&\3\2\2\2\n*\3\2"+
+		"\4\2\26\31\33\35g\2\30\3\2\2\2\4!\3\2\2\2\6#\3\2\2\2\b&\3\2\2\2\n*\3\2"+
 		"\2\2\f.\3\2\2\2\16;\3\2\2\2\20a\3\2\2\2\22c\3\2\2\2\24e\3\2\2\2\26g\3"+
 		"\2\2\2\30\31\5\4\3\2\31\32\7\2\2\3\32\3\3\2\2\2\33\"\5\6\4\2\34\"\5\b"+
 		"\5\2\35\"\5\n\6\2\36\"\5\f\7\2\37\"\5\16\b\2 \"\5\20\t\2!\33\3\2\2\2!"+
@@ -775,7 +777,7 @@ public class CriterionParser extends Parser {
 		"\2\2\2MK\3\2\2\2MN\3\2\2\2Nb\3\2\2\2OM\3\2\2\2PQ\7\3\2\2QR\5\4\3\2RS\7"+
 		"\4\2\2ST\7\24\2\2TU\7\3\2\2UV\5\4\3\2V^\7\4\2\2WX\7\24\2\2XY\7\3\2\2Y"+
 		"Z\5\4\3\2Z[\7\4\2\2[]\3\2\2\2\\W\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2"+
-		"\2_b\3\2\2\2`^\3\2\2\2a?\3\2\2\2aP\3\2\2\2b\21\3\2\2\2cd\7\31\2\2d\23"+
+		"\2_b\3\2\2\2`^\3\2\2\2a?\3\2\2\2aP\3\2\2\2b\21\3\2\2\2cd\7\32\2\2d\23"+
 		"\3\2\2\2ef\t\5\2\2f\25\3\2\2\2gh\7\26\2\2h\27\3\2\2\2\7!\66M^a";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

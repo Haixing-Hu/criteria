@@ -38,20 +38,22 @@ import com.github.haixing_hu.text.ParsingException;
  * <b>NOTE:</b> This parser can only recognize the string representation of
  * criteria formatted by the {@link SqlCriterionFormatter} class.
  * <p>
- * <b>NOTE:</b> Since the standard SQL does not distinguish between string
- * literals and character literals, this parser will parse all single quoted
- * string literals in the SQL statement into a {@code String} object. That it,
- * it will never parse a {@code Character} value, even if the string literal
- * has length of 1.
+ * <b>NOTE:</b> In order to distinguish between character literal and string
+ * literal, we make the following conventions:
+ * <ul>
+ * <li>the character literals are quoted by single quotation marks, and</li>
+ * <li>the string literals are quoted by double quotation marks.</li>
+ * </ul>
  *
  * @author Haixing Hu
  */
-public class SqlCriterionParser implements Parser<String, Criterion> {
+public final class SqlCriterionParser implements Parser<String, Criterion> {
 
   @Override
-  public Criterion parse(String input) throws ParsingException {
+  public Criterion parse(final String input) throws ParsingException {
     final ANTLRInputStream is = new ANTLRInputStream(input);
-    final ThrowExceptionErrorListener listener = new ThrowExceptionErrorListener();
+    final ThrowExceptionErrorListener listener =
+        new ThrowExceptionErrorListener();
     final CriterionLexer lexer = new CriterionLexer(is);
     lexer.removeErrorListeners();
     lexer.addErrorListener(listener);
@@ -64,7 +66,8 @@ public class SqlCriterionParser implements Parser<String, Criterion> {
       final CriterionParsingVisitor visitor = new CriterionParsingVisitor();
       final Criterion result = visitor.visit(tree);
       if (result == null) {
-        throw new ParsingException(input, 0, "Failed to parse the SQL representation.");
+        throw new ParsingException(input, 0,
+            "Failed to parse the SQL representation.");
       }
       return result;
     } catch (final AntlrParseException e) {

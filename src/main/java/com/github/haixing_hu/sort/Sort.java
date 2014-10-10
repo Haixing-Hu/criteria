@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Haixing Hu
  */
-public class Sort extends ArrayList<SortOrder> {
+public final class Sort extends ArrayList<SortOrder> {
 
   private static final long serialVersionUID = -7323846213838886382L;
 
@@ -56,7 +56,7 @@ public class Sort extends ArrayList<SortOrder> {
    * @param orders
    *          a list of sorting orders.
    */
-  public Sort(List<SortOrder> orders) {
+  public Sort(final List<SortOrder> orders) {
     super(orders.size());
     this.addAll(orders);
   }
@@ -68,7 +68,7 @@ public class Sort extends ArrayList<SortOrder> {
    * @param properties
    *          an array of properties used as sorting orders.
    */
-  public Sort(String... properties) {
+  public Sort(final String... properties) {
     this(SortOrder.DEFAULT_DIRECTION, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY,
         properties);
   }
@@ -82,7 +82,7 @@ public class Sort extends ArrayList<SortOrder> {
    * @param properties
    *          an array of properties used as sorting orders.
    */
-  public Sort(SortDirection direction, String... properties) {
+  public Sort(final SortDirection direction, final String... properties) {
     this(direction, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY, properties);
   }
 
@@ -95,7 +95,7 @@ public class Sort extends ArrayList<SortOrder> {
    * @param properties
    *          a list of properties used as sorting orders.
    */
-  public Sort(SortDirection direction, List<String> properties) {
+  public Sort(final SortDirection direction, final List<String> properties) {
     this(direction, SortOrder.DEFAULT_NULL_HANDLING_STRATEGY, properties);
   }
 
@@ -110,11 +110,13 @@ public class Sort extends ArrayList<SortOrder> {
    * @param properties
    *          an array of properties used as sorting orders.
    */
-    public Sort(SortDirection direction,
-        NullHandlingStrategy nullHandlingStrategy, String... properties) {
+  public Sort(final SortDirection direction,
+      final NullHandlingStrategy nullHandlingStrategy,
+      final String... properties) {
     super(properties.length);
     for (final String property : properties) {
-      final SortOrder order = new SortOrder(property, direction, nullHandlingStrategy);
+      final SortOrder order = new SortOrder(property, direction,
+          nullHandlingStrategy);
       this.add(order);
     }
   }
@@ -130,11 +132,13 @@ public class Sort extends ArrayList<SortOrder> {
    * @param properties
    *          a list of properties used as sorting orders.
    */
-  public Sort(SortDirection direction,
-      NullHandlingStrategy nullHandlingStrategy, List<String> properties) {
+  public Sort(final SortDirection direction,
+      final NullHandlingStrategy nullHandlingStrategy,
+      final List<String> properties) {
     super(properties.size());
     for (final String property : properties) {
-      final SortOrder order = new SortOrder(property, direction, nullHandlingStrategy);
+      final SortOrder order = new SortOrder(property, direction,
+          nullHandlingStrategy);
       this.add(order);
     }
   }

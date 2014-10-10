@@ -18,7 +18,8 @@
 package com.github.haixing_hu.criteria;
 
 /**
- * The enumeration of operators for relations between an element and a collection.
+ * The enumeration of operators for relations between an element and a
+ * collection.
  *
  * @author Haixing Hu
  */
@@ -41,28 +42,5 @@ public enum CollectionOperator {
    */
   public String symbol() {
     return symbol;
-  }
-
-
-  /**
-   * Gets the {@link CollectionOperator} corresponds to the specified symbol.
-   * <p>
-   * Note that the string comparison is case-insensitive.
-   *
-   * @param symbol
-   *          a specified symbol.
-   * @return the {@link CollectionOperator} corresponds to the specified symbol.
-   * @throws IllegalArgumentException
-   *           if the symbol does not corresponds to any collection operator.
-   */
-  public static CollectionOperator forSymbol(String symbol) {
-    symbol = symbol.toUpperCase();
-    if (symbol.equals(IN.symbol())) {
-      return IN;
-    } else if (symbol.equals(NOT_IN.symbol())) {
-      return NOT_IN;
-    }
-    throw new IllegalArgumentException(
-        "Invalid symbol for collection operator: " + symbol);
   }
 }
