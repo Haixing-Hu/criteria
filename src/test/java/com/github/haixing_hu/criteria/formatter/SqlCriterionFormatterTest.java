@@ -95,6 +95,12 @@ public class SqlCriterionFormatterTest {
 
     final ValueCriterion c6 = new ValueCriterion("field1", BinaryOperator.NOT_EQUAL, 'd');
     assertEquals("field1 != 'd'", formatter.format(c6));
+
+    final ValueCriterion c7 = new ValueCriterion("field1", BinaryOperator.LESS, 'c');
+    assertEquals("field1 < 'c'", formatter.format(c7));
+
+    final ValueCriterion c8 = new ValueCriterion("field1", BinaryOperator.LESS, '\'');
+    assertEquals("field1 < '\\''", formatter.format(c8));
   }
 
   @Test

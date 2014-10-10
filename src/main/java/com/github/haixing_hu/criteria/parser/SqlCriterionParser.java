@@ -28,8 +28,8 @@ import com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter;
 import com.github.haixing_hu.criteria.parser.sql.CriterionLexer;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParsingVisitor;
-import com.github.haixing_hu.text.ParsingException;
 import com.github.haixing_hu.text.Parser;
+import com.github.haixing_hu.text.ParsingException;
 
 
 /**
@@ -37,6 +37,12 @@ import com.github.haixing_hu.text.Parser;
  * <p>
  * <b>NOTE:</b> This parser can only recognize the string representation of
  * criteria formatted by the {@link SqlCriterionFormatter} class.
+ * <p>
+ * <b>NOTE:</b> Since the standard SQL does not distinguish between string
+ * literals and character literals, this parser will parse all single quoted
+ * string literals in the SQL statement into a {@code String} object. That it,
+ * it will never parse a {@code Character} value, even if the string literal
+ * has length of 1.
  *
  * @author Haixing Hu
  */

@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class Sort extends ArrayList<SortOrder> {
 
-  private static final long serialVersionUID = - 7323846213838886382L;
+  private static final long serialVersionUID = -7323846213838886382L;
 
   /**
    * Constructs an empty sorting rule.
@@ -43,7 +43,7 @@ public class Sort extends ArrayList<SortOrder> {
    * @param orders
    *          an array of sorting orders.
    */
-  public Sort(SortOrder... orders) {
+  public Sort(final SortOrder... orders) {
     super(orders.length);
     for (final SortOrder order : orders) {
       this.add(order);
