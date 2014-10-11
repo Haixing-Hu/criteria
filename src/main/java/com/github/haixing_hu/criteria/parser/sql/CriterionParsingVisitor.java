@@ -43,18 +43,13 @@ import com.github.haixing_hu.criteria.parser.sql.CriterionParser.PropertyContext
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser.UnaryCriterionContext;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser.ValueContext;
 import com.github.haixing_hu.criteria.parser.sql.CriterionParser.ValueCriterionContext;
+import com.github.haixing_hu.lang.CharUtils;
+import com.github.haixing_hu.lang.StringUtils;
 
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.BACKSLASH_STRING;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.DOUBLE_QUOTE;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.DOUBLE_QUOTE_STRING;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_BACKSLASH;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_DOUBLE_QUOTE;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_SINGLE_QUOTE;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPED_WILDCARD;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.SINGLE_QUOTE;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.SINGLE_QUOTE_STRING;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.CHAR_QUOTE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.ESCAPE;
+import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.STRING_QUOTE;
 import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.WILDCARD;
-import static com.github.haixing_hu.criteria.formatter.SqlCriterionFormatter.WILDCARD_STRING;
 
 /**
  * A visitor used to parse.
@@ -67,24 +62,28 @@ public final class CriterionParsingVisitor extends
   @Override
   public Criterion visitLikeCriterion(final LikeCriterionContext ctx) {
     final String property = ctx.property().getText();
-    String pattern = parseStringValue(ctx.pattern().getText());
-    pattern = pattern.replace(ESCAPED_WILDCARD, WILDCARD_STRING);
+    String pattern = StringUtils.unquote(ctx.pattern().getText(),
+        STRING_QUOTE, STRING_QUOTE);
     final int n = pattern.length();
     final MatchMode mode;
     if ((n >= 2)
         && (pattern.charAt(0) == WILDCARD)
-        && (pattern.charAt(n - 1) == WILDCARD)) {
+        && (pattern.charAt(n - 1) == WILDCARD)
+        && (! StringUtils.isEscaped(pattern, ESCAPE, n - 1))) {
       mode = MatchMode.ANYWHERE;
       pattern = pattern.substring(1, n - 1);
     } else if ((n >= 1) && (pattern.charAt(0) == WILDCARD)) {
       mode = MatchMode.END;
       pattern = pattern.substring(1);
-    } else if ((n >= 1) && (pattern.charAt(n - 1) == WILDCARD)) {
+    } else if ((n >= 1)
+        && (pattern.charAt(n - 1) == WILDCARD)
+        && (! StringUtils.isEscaped(pattern, ESCAPE, n - 1))) {
       mode = MatchMode.START;
       pattern = pattern.substring(0, n - 1);
     } else {
       mode = MatchMode.ANYWHERE;
     }
+    pattern = StringUtils.unescape(pattern, ESCAPE);
     return new LikeCriterion(property, pattern, mode);
   }
 
@@ -207,52 +206,14 @@ public final class CriterionParsingVisitor extends
       case CriterionParser.PLACEHOLDER:
         return null;
       case CriterionParser.CHARACTER:
-        return parseCharacterValue(valueString);
+        return Character.valueOf(CharUtils.unquote(valueString,
+            ESCAPE, CHAR_QUOTE, CHAR_QUOTE));
       case CriterionParser.STRING:
-        return parseStringValue(valueString);
+        return StringUtils.unquote(valueString, ESCAPE, STRING_QUOTE,
+            STRING_QUOTE);
       default:
         throw new IllegalArgumentException(
             "Invalid token type for value: " + ctx.getText());
     }
-  }
-
-  private Character parseCharacterValue(final String str) {
-    final int n = str.length();
-    if (n < 2) {
-      throw new IllegalArgumentException(
-          "Invalid string value representation: " + str);
-    }
-    if ((str.charAt(0) != SINGLE_QUOTE) || (str.charAt(n - 1) != SINGLE_QUOTE)) {
-      throw new IllegalArgumentException(
-          "Invalid quoted character value: " + str);
-    }
-    //  strip quotes
-    String result = str.substring(1, n - 1);
-    //  replace escaped quotes
-    // result = result.replace(ESCAPED_BACKSLASH, BACKSLASH_STRING);
-    result = result.replace(ESCAPED_SINGLE_QUOTE, SINGLE_QUOTE_STRING);
-    if (result.length() != 1) {
-      throw new IllegalArgumentException(
-          "Invalid quoted character value: " + str);
-    }
-    return Character.valueOf(result.charAt(0));
-  }
-
-  private String parseStringValue(final String str) {
-    final int n = str.length();
-    if (n < 2) {
-      throw new IllegalArgumentException(
-          "Invalid string value representation: " + str);
-    }
-    if ((str.charAt(0) != DOUBLE_QUOTE) || (str.charAt(n - 1) != DOUBLE_QUOTE)) {
-      throw new IllegalArgumentException(
-          "Invalid quoted string value: " + str);
-    }
-    //  strip quotes
-    String result = str.substring(1, n - 1);
-    //  replace escaped quotes
-    result = result.replace(ESCAPED_BACKSLASH, BACKSLASH_STRING);
-    result = result.replace(ESCAPED_DOUBLE_QUOTE, DOUBLE_QUOTE_STRING);
-    return result;
   }
 }

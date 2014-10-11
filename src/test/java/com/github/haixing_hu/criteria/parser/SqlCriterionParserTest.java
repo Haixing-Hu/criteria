@@ -178,6 +178,15 @@ public final class SqlCriterionParserTest {
     final LikeCriterion c5 = new LikeCriterion("field1", "x\"y\\z%",
         MatchMode.ANYWHERE);
     assertEquals(c5, parser.parse("field1 LIKE \"%x\\\"y\\\\z\\%%\""));
+
+    final LikeCriterion c6 = new LikeCriterion("field1", "x\"y\\z%",
+        MatchMode.ANYWHERE);
+    assertEquals(c6, parser.parse("field1 LIKE \"%x\\\"y\\\\z\\%%\""));
+
+    final LikeCriterion c7 = new LikeCriterion("field1", "x\"y\\z%",
+        MatchMode.END);
+    assertEquals(c7, parser.parse("field1 LIKE \"%x\\\"y\\\\z\\%\""));
+
   }
 
   @Test

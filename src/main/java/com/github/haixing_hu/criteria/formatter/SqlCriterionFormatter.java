@@ -28,6 +28,8 @@ import com.github.haixing_hu.criteria.LogicOperator;
 import com.github.haixing_hu.criteria.MatchMode;
 import com.github.haixing_hu.criteria.UnaryCriterion;
 import com.github.haixing_hu.criteria.ValueCriterion;
+import com.github.haixing_hu.lang.CharUtils;
+import com.github.haixing_hu.lang.StringUtils;
 import com.github.haixing_hu.text.Formatter;
 
 /**
@@ -45,33 +47,15 @@ import com.github.haixing_hu.text.Formatter;
 public final class SqlCriterionFormatter implements
     Formatter<Criterion, String> {
 
-  public static final char BACKSLASH = '\\';
+  public static final char ESCAPE = '\\';
 
-  public static final char SINGLE_QUOTE = '\'';
+  public static final char CHAR_QUOTE = '\'';
 
-  public static final char DOUBLE_QUOTE = '"';
+  public static final char STRING_QUOTE = '"';
 
   public static final char WILDCARD = '%';
 
   public static final char PLACEHOLDER = '?';
-
-  public static final String BACKSLASH_STRING = "\\";
-
-  public static final String SINGLE_QUOTE_STRING = "'";
-
-  public static final String DOUBLE_QUOTE_STRING = "\"";
-
-  public static final String WILDCARD_STRING = "%";
-
-  public static final String PLACEHOLDER_STRING = "?";
-
-  public static final String ESCAPED_BACKSLASH = "\\\\";
-
-  public static final String ESCAPED_SINGLE_QUOTE = "\\'";
-
-  public static final String ESCAPED_DOUBLE_QUOTE = "\\\"";
-
-  public static final String ESCAPED_WILDCARD = "\\%";
 
   public static final String LIKE = "LIKE";
 
@@ -163,61 +147,46 @@ public final class SqlCriterionFormatter implements
     if (value == null) {
       builder.append(PLACEHOLDER);
     } else if (value instanceof Character) {
-      appendCharacterLiteral((Character) value, builder);
+      final char ch = ((Character) value).charValue();
+      CharUtils.quote(ch, ESCAPE, CHAR_QUOTE, CHAR_QUOTE, builder);
     } else if (value instanceof String) {
-      appendStringLiteral((String) value, builder);
+      final String str = (String) value;
+      StringUtils.quote(str, ESCAPE, STRING_QUOTE, STRING_QUOTE, builder);
     } else {
       builder.append(value);
     }
   }
 
-  private void appendCharacterLiteral(final Character value,
-      final StringBuilder builder) {
-    if (value == SINGLE_QUOTE) {
-      builder.append(SINGLE_QUOTE).append(ESCAPED_SINGLE_QUOTE).append(SINGLE_QUOTE);
-    } else {
-      builder.append(SINGLE_QUOTE).append(value).append(SINGLE_QUOTE);
-    }
-  }
-
-  private void appendStringLiteral(final String value,
-      final StringBuilder builder) {
-    String result = value.replace(BACKSLASH_STRING, ESCAPED_BACKSLASH);
-    result = result.replace(DOUBLE_QUOTE_STRING, ESCAPED_DOUBLE_QUOTE);
-    builder.append(DOUBLE_QUOTE).append(result).append(DOUBLE_QUOTE);
-  }
-
   private void appendLikePattern(final String value, final MatchMode mode,
       final StringBuilder builder) {
-    String str = value.replace(BACKSLASH_STRING, ESCAPED_BACKSLASH);
-    str = str.replace(DOUBLE_QUOTE_STRING, ESCAPED_DOUBLE_QUOTE);
-    str = str.replace(WILDCARD_STRING, ESCAPED_WILDCARD);
+    final String str = StringUtils.escape(value, ESCAPE, STRING_QUOTE,
+        STRING_QUOTE, WILDCARD);
     switch (mode) {
       case START:
         builder.append(LIKE)
                .append(' ')
-               .append(DOUBLE_QUOTE)
+               .append(STRING_QUOTE)
                .append(str)
                .append(WILDCARD)
-               .append(DOUBLE_QUOTE);
+               .append(STRING_QUOTE);
         break;
       case END:
         builder.append(LIKE)
                .append(' ')
-               .append(DOUBLE_QUOTE)
+               .append(STRING_QUOTE)
                .append(WILDCARD)
                .append(str)
-               .append(DOUBLE_QUOTE);
+               .append(STRING_QUOTE);
         break;
       case ANYWHERE:
       default:
         builder.append(LIKE)
                .append(' ')
-               .append(DOUBLE_QUOTE)
+               .append(STRING_QUOTE)
                .append(WILDCARD)
                .append(str)
                .append(WILDCARD)
-               .append(DOUBLE_QUOTE);
+               .append(STRING_QUOTE);
         break;
     }
   }
